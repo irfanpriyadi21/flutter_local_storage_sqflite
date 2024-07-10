@@ -1,5 +1,9 @@
 # flutter_local_storage
 
+<p float="left">
+  <img src="/img.png" width="200" />
+</p>
+
 A new Flutter project.
 
 ## Getting Started
