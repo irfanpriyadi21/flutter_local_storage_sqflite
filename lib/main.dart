@@ -51,7 +51,6 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isLoading = true;
   List<Map<String, dynamic>> _journal = [];
 
-
   Future<void> _addItem()async{
     await SqlHelper.createItem(_titleController.text, _descriptionController.text);
     _refreshJournal();
@@ -72,8 +71,6 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     _refreshJournal();
   }
-
-
 
   void _refreshJournal()async{
     final data =  await SqlHelper.getItems();
@@ -96,7 +93,6 @@ class _MyHomePageState extends State<MyHomePage> {
       final existingJournal = _journal.firstWhere((element) => element['id'] == id);
       _titleController.text = existingJournal['title'];
       _descriptionController.text = existingJournal['description'];
-
     }
 
     showModalBottomSheet(
