@@ -58,6 +58,22 @@ class _MyHomePageState extends State<MyHomePage> {
     print("..number of items ${_journal.length}");
   }
 
+  Future<void> _update(int id)async{
+    await SqlHelper.updateItem(id, _titleController.text, _descriptionController.text);
+    _refreshJournal();
+  }
+
+  Future<void> _delete(int id)async{
+    await SqlHelper.deleteItem(id);
+    ScaffoldMessenger.of(context).showSnackBar(
+        (const SnackBar(
+          content: Text("Successfully deleted a Journal"),
+        ))
+    );
+    _refreshJournal();
+  }
+
+
 
   void _refreshJournal()async{
     final data =  await SqlHelper.getItems();
@@ -109,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     if(id == null){
                       await _addItem();
                     }else{
-                      // await _updateItem(id);
+                      await _update(id);
                     }
                     _titleController.text = "";
                     _descriptionController.text = "";
@@ -139,7 +155,41 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
+            isLoading
+            ? CircularProgressIndicator()
+            : ListView.builder(
+              itemCount: _journal.length,
+                shrinkWrap: true,
+                itemBuilder: ((BuildContext context, int index){
+                  return Card(
+                    color: Colors.orange[200],
+                    margin: EdgeInsets.all(15),
+                    child: ListTile(
+                      title: Text(_journal[index]['title']),
+                      subtitle: Text(_journal[index]['description']),
+                      trailing: SizedBox(
+                        width: 100,
+                        child: Row(
+                          children: [
+                            IconButton(
+                                onPressed: (){
+                                  _showForm(_journal[index]["id"]);
+                                },
+                                icon: Icon(Icons.edit)
+                            ),
+                            IconButton(
+                                onPressed: (){
+                                  _delete(_journal[index]["id"]);
+                                },
+                                icon: Icon(Icons.delete)
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                })
+            )
           ],
         ),
       ),
